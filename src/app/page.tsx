@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6 text-center bg-black text-white">
+    <main className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
       <h1 className="text-4xl font-bold mb-4">🎬 MovieMesh</h1>
       <p className="text-lg max-w-xl">
         An open-source movie search app — discover films through the people who made them.
