@@ -1,3 +1,4 @@
+"use client"
 import AutocompleteSearch from "@/components/searchBox";
 export default function Home() {
   return (
@@ -11,7 +12,11 @@ export default function Home() {
         <p className="mt-4 text-sm opacity-70 mb-4">
           🚧 Work in progress. Stay tuned!
         </p>
-        <AutocompleteSearch />
+        <AutocompleteSearch
+          onSelect={(id) => {
+            alert(id);
+          }}
+        />
       </div>
       hh
     </main>

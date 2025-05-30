@@ -21,14 +21,11 @@
     "@eslint/eslintrc": "^3",
     "@faker-js/faker": "^9.8.0",
     "@tailwindcss/postcss": "^4",
-<<<<<<< HEAD
-    "@types/lodash": "^4.17.17",
-=======
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@types/jest": "^29.5.14",
->>>>>>> main
+    "@types/lodash": "^4.17.17",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
