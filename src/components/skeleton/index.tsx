@@ -9,7 +9,7 @@ export default function Skeleton({ type, count = 3 }: SkeletonType) {
     return (
       <>
         {Array.from({ length: count }).map((_, i) => (
-          <div key={i}>
+          <div key={i} data-testid="userSearch">
             <div className="flex items-center">
               <UserIcon className="w-10 h-10 me-3 text-gray-200" />
               <div className="border-b-gray-300">
