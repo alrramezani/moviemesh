@@ -1,5 +1,5 @@
 import { renderHook } from "@testing-library/react";
-import { useSearch } from "./useSearch";
+import useSearch  from "./useSearch";
 import QueryWrapper from "@/utils/queryWrapper";
 import { faker } from "@faker-js/faker";
 

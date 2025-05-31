@@ -36,7 +36,7 @@ export default function Skeleton({ type, count = 3 }: SkeletonType) {
     }
   }, [type]);
   return (
-    <div role="status" className="max-w-sm animate-pulse">
+    <div role="status" data-testid="skeleton" className="max-w-sm animate-pulse">
       {LoadingBlock()}
     </div>
   );

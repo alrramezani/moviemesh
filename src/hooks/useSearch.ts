@@ -9,7 +9,10 @@ type responseType = {
   popularity: number;
   profile_path: string;
 };
-const fetchPersons = async (query: string, limit = 10): Promise<responseType[]> => {
+const fetchPersons = async (
+  query: string,
+  limit = 10
+): Promise<responseType[]> => {
   const params = new URLSearchParams();
   params.append("query", query);
   const response = await fetch(
@@ -33,4 +36,4 @@ const useSearch = (query: string) => {
   });
 };
 
-export { useSearch, fetchPersons };
+export default useSearch;

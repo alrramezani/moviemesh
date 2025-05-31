@@ -1,18 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
 import { debounce } from "lodash";
-import { useSearch } from "@/hooks/useSearch";
+import useSearch  from "@/hooks/useSearch";
 import Skeleton from "@/components/skeleton";
 import Image from "next/image";
 import { SearchIcon, ArrowLeftIcon, UserIcon } from "@/components/icons";
-type AutocompleteSearchType = {
+type SearchBoxType = {
   placeholder?: string;
   onSelect: (id: number | string) => void;
 };
-export default function AutocompleteSearch({
+export default function SearchBox({
   placeholder,
   onSelect,
-}: AutocompleteSearchType) {
+}: SearchBoxType) {
   const [focus, setFocus] = useState<boolean>(false);
   const [query, setQuery] = useState("");
   const { data, refetch, isLoading } = useSearch(query);
@@ -55,7 +55,6 @@ export default function AutocompleteSearch({
         </div>
         <input
           type="search"
-          id="default-search"
           className={`block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 bg-gray-50  ${
             focus ? "focus:outline-none focus:ring-0" : "rounded-lg"
           } md:rounded-lg`}
@@ -73,12 +72,13 @@ export default function AutocompleteSearch({
         }`}
       >
         {isLoading ? (
-          <Skeleton type="userSearch" count={5} />
+          <Skeleton type="userSearch" count={5}/>
         ) : (
           data?.map((person, i) => (
             <div key={person.id}>
               <div
                 className="flex items-center cursor-pointer"
+                data-testid={"search-item-"+person.id}
                 onClick={() => onSelect(person.id)}
               >
                 {!person.profile_path ? (
