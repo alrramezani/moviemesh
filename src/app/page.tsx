@@ -1,5 +1,11 @@
-"use client"
+"use client";
+import usePerson from "@/hooks/usePerson";
+import { useEffect } from "react";
 export default function Home() {
+  const { refetch } = usePerson(287);
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
       <div className="bg-white w-[60%] p-4 rounded-2xl shadow">
