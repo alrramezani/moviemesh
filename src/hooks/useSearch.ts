@@ -1,18 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-type responseType = {
-  adult: boolean;
-  gender: number;
-  id: number;
-  known_for_department: string;
-  name: string;
-  original_name: string;
-  popularity: number;
-  profile_path: string;
-};
+import { personType } from "@/types";
 const fetchPersons = async (
   query: string,
   limit = 10
-): Promise<responseType[]> => {
+): Promise<personType[]> => {
   const params = new URLSearchParams();
   params.append("query", query);
   const response = await fetch(
