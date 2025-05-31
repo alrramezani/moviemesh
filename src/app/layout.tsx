@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Montserrat, Open_Sans } from "next/font/google";
-import ReactQueryProvider from "@/components/ReactQueryProvider";
+import ReactQueryProvider from "@/components/reactQueryProvider";
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
