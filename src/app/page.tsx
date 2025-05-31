@@ -1,5 +1,4 @@
 "use client"
-import SearchBox from "@/components/searchBox";
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
@@ -12,11 +11,6 @@ export default function Home() {
         <p className="mt-4 text-sm opacity-70 mb-4">
           🚧 Work in progress. Stay tuned!
         </p>
-        <SearchBox
-          onSelect={(id) => {
-            alert(id);
-          }}
-        />
       </div>
     </main>
   );
