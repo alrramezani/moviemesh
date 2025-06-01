@@ -12,7 +12,6 @@ describe("useSearch", () => {
     global.fetch = jest.fn().mockResolvedValue({
       json: jest.fn().mockResolvedValue({ results: fakeResults }),
     }) as jest.Mock;
-
     process.env.NEXT_PUBLIC_API_URL = "https://example.com/";
     process.env.NEXT_PUBLIC_API_ACCESS_TOKEN = "test-token";
   });
