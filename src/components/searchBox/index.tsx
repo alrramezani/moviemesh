@@ -14,24 +14,31 @@ export default function SearchBox({
   onSelect,
 }: SearchBoxType) {
   const [focus, setFocus] = useState<boolean>(false);
-  const [query, setQuery] = useState("");
-  const { data, refetch, isStale, isLoading } = useSearch(query);
-
-  const debouncedRefetch = useMemo(
+  const [inputValue, setInputValue] = useState("");
+  const [queryKey, setQueryKey] = useState("");
+  const { data, isLoading } = useSearch(queryKey);
+  const debouncedQueryKey = useMemo(
     () =>
       debounce((value: string) => {
-        if (value.length > 2 && isStale) refetch();
+        if (value.length > 2) setQueryKey(value);
       }, 500),
-    [refetch, isStale]
+    []
   );
   useEffect(() => {
-    debouncedRefetch(query);
-    return () => debouncedRefetch.cancel();
-  }, [query, debouncedRefetch]);
+    if (inputValue.length < 3) {
+      setQueryKey("");
+    }
+    debouncedQueryKey(inputValue);
+    return () => debouncedQueryKey.cancel();
+  }, [inputValue, debouncedQueryKey]);
+  const resetAll = () => {
+    setInputValue("");
+    setQueryKey("");
+    setFocus(false);
+  };
   const handleSelect = (id: string | number) => {
     onSelect(id);
-    setQuery("");
-    setFocus(false);
+    resetAll();
   };
   return (
     <div
@@ -54,10 +61,7 @@ export default function SearchBox({
             className={`w-6 h-6 cursor-pointer text-gray-500 ${
               focus ? "block" : "hidden"
             } md:hidden`}
-            onClick={() => {
-              setQuery("");
-              setFocus(false);
-            }}
+            onClick={resetAll}
           />
         </div>
         <input
@@ -67,8 +71,8 @@ export default function SearchBox({
           } md:rounded-lg`}
           placeholder={placeholder}
           required
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
         />

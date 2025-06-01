@@ -6,6 +6,7 @@ type PeopleStore = {
   setPeople: (people: personType[]) => void;
   addPerson: (person: personType) => void;
   removePerson: (id: string) => void;
+  isPersonSelected: (id: number) => boolean;
 };
 
 export const usePeopleStore = create<PeopleStore>((set, get) => ({
@@ -24,4 +25,7 @@ export const usePeopleStore = create<PeopleStore>((set, get) => ({
         (person) => person.id.toString() !== id
       ),
     }),
+  isPersonSelected: (id: number): boolean => {
+  return get().selectedPeople.some((p) => p.id === id);
+}
 }));
