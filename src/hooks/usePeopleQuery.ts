@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
-export function usePeopleQuery() {
+export default function usePeopleQuery() {
   const router = useRouter();
   const searchParams = useSearchParams();
 

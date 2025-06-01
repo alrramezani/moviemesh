@@ -23,7 +23,9 @@ const useSearch = (query: string) => {
   return useQuery({
     queryKey: ["search", query],
     queryFn: () => fetchPersons(query),
-    enabled: false,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    enabled: !!query,
   });
 };
 

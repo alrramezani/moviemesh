@@ -68,7 +68,7 @@ describe("SearchBox", () => {
     expect(await findByText(/no matches found/i)).toBeInTheDocument();
   });
 
-  it("calls onSelect when a person is clicked", async () => {
+  it("calls onSelect when a person is selected", async () => {
     (useSearch as jest.Mock).mockReturnValue({
       data: [
         {
@@ -84,7 +84,8 @@ describe("SearchBox", () => {
     });
 
     const { findByTestId } = render(<SearchBox onSelect={mockOnSelect} />);
-    fireEvent.click(await findByTestId("search-item-2"));
+    fireEvent.touchStart(await findByTestId("search-item-2"));
+    fireEvent.mouseDown(await findByTestId("search-item-2"));
     expect(mockOnSelect).toHaveBeenCalledWith(2);
   });
 

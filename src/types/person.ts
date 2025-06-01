@@ -10,6 +10,7 @@ export type personType = {
   imdb_id: string;
   known_for_department: string;
   name: string;
+  original_name?:string;
   place_of_birth: string;
   popularity: number;
   profile_path: string;

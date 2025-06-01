@@ -18,7 +18,9 @@ const usePerson = (personId: number) => {
   return useQuery({
     queryKey: ["person", personId],
     queryFn: () => fetchPerson(personId),
-    enabled: false,
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+    enabled: !!personId,
   });
 };
 

@@ -1,5 +1,5 @@
 import { render, fireEvent } from "@testing-library/react";
-import { usePeopleQuery } from "@/hooks/usePeopleQuery";
+import usePeopleQuery from "@/hooks/usePeopleQuery";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 

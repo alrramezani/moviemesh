@@ -1,36 +1,43 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { debounce } from "lodash";
-import useSearch  from "@/hooks/useSearch";
+import useSearch from "@/hooks/useSearch";
 import Skeleton from "@/components/skeleton";
 import Image from "next/image";
 import { SearchIcon, ArrowLeftIcon, UserIcon } from "@/components/icons";
 type SearchBoxType = {
   placeholder?: string;
-  onSelect: (id: number | string) => void;
+  onSelect: (id: string | number) => void;
 };
 export default function SearchBox({
-  placeholder,
+  placeholder = "Search Casts...",
   onSelect,
 }: SearchBoxType) {
   const [focus, setFocus] = useState<boolean>(false);
   const [query, setQuery] = useState("");
-  const { data, refetch, isLoading } = useSearch(query);
+  const { data, refetch, isStale, isLoading } = useSearch(query);
 
+  const debouncedRefetch = useMemo(
+    () =>
+      debounce((value: string) => {
+        if (value.length > 2 && isStale) refetch();
+      }, 500),
+    [refetch, isStale]
+  );
   useEffect(() => {
-    const debouncedSearch = debounce((value: string) => {
-      if (value.length > 2) {
-        refetch();
-      }
-    }, 500);
-    debouncedSearch(query);
-    return () => debouncedSearch.cancel();
-  }, [query, refetch]);
+    debouncedRefetch(query);
+    return () => debouncedRefetch.cancel();
+  }, [query, debouncedRefetch]);
+  const handleSelect = (id: string | number) => {
+    onSelect(id);
+    setQuery("");
+    setFocus(false);
+  };
   return (
     <div
       className={`w-full ${
         focus ? "fixed h-full bg-white z-50" : "relative"
-      } top-0 left-0 md:relative flex flex-col`}
+      } top-0 left-0 md:relative md:z-10 flex flex-col`}
     >
       <div className="relative">
         <div
@@ -58,7 +65,7 @@ export default function SearchBox({
           className={`block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 bg-gray-50  ${
             focus ? "focus:outline-none focus:ring-0" : "rounded-lg"
           } md:rounded-lg`}
-          placeholder={placeholder || "Search Casts..."}
+          placeholder={placeholder}
           required
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -72,14 +79,15 @@ export default function SearchBox({
         }`}
       >
         {isLoading ? (
-          <Skeleton type="userSearch" count={5}/>
+          <Skeleton type="userSearch" count={5} />
         ) : (
           data?.map((person, i) => (
             <div key={person.id}>
               <div
                 className="flex items-center cursor-pointer"
-                data-testid={"search-item-"+person.id}
-                onClick={() => onSelect(person.id)}
+                data-testid={"search-item-" + person.id}
+                onMouseDown={() => handleSelect(person.id)}
+                onTouchStart={() => handleSelect(person.id)}
               >
                 {!person.profile_path ? (
                   <UserIcon className="w-10 h-10 me-3 text-gray-200" />
