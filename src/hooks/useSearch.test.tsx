@@ -17,8 +17,8 @@ describe("useSearch", () => {
     process.env.NEXT_PUBLIC_API_ACCESS_TOKEN = "test-token";
   });
 
-  it("should not fetch by default (enabled: false)", async () => {
-    renderHook(() => useSearch("key"), {
+  it("should not fetch by default (enabled: !!key)", async () => {
+    renderHook(() => useSearch(""), {
       wrapper: QueryWrapper,
     });
     expect(global.fetch).not.toHaveBeenCalled();

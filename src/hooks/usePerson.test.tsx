@@ -37,8 +37,8 @@ describe("useSearch", () => {
     process.env.NEXT_PUBLIC_API_ACCESS_TOKEN = "test-token";
   });
 
-  it("should not fetch by default (enabled: false)", async () => {
-    renderHook(() => usePerson(287), {
+  it("should not fetch by default (enabled: !!personid)", async () => {
+    renderHook(() => usePerson(), {
       wrapper: QueryWrapper,
     });
     expect(global.fetch).not.toHaveBeenCalled();
