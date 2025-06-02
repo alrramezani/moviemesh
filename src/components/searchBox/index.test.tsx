@@ -1,15 +1,19 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@testing-library/react";
+
 import SearchBox from "./index";
 import useSearch from "@/hooks/useSearch";
 import "@testing-library/jest-dom";
-jest.mock("@/hooks/useSearch", () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
+
+jest.mock("@/hooks/useSearch", () => jest.fn());
 
 describe("SearchBox", () => {
   const mockOnSelect = jest.fn();
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -17,7 +21,6 @@ describe("SearchBox", () => {
   it("renders the input with placeholder", () => {
     (useSearch as jest.Mock).mockReturnValue({
       data: [],
-      refetch: jest.fn(),
       isLoading: false,
     });
     render(<SearchBox placeholder="Search People" onSelect={mockOnSelect} />);
@@ -28,7 +31,6 @@ describe("SearchBox", () => {
   it("shows skeleton while loading", async () => {
     (useSearch as jest.Mock).mockReturnValue({
       data: [],
-      refetch: jest.fn(),
       isLoading: true,
     });
 
@@ -47,7 +49,6 @@ describe("SearchBox", () => {
           known_for_department: "Acting",
         },
       ],
-      refetch: jest.fn(),
       isLoading: false,
     });
 
@@ -60,7 +61,6 @@ describe("SearchBox", () => {
   it("shows 'no matches' message when data is empty", async () => {
     (useSearch as jest.Mock).mockReturnValue({
       data: [],
-      refetch: jest.fn(),
       isLoading: false,
     });
 
@@ -79,7 +79,6 @@ describe("SearchBox", () => {
           known_for_department: "Directing",
         },
       ],
-      refetch: jest.fn(),
       isLoading: false,
     });
 
@@ -90,10 +89,8 @@ describe("SearchBox", () => {
   });
 
   it("refetches when input value changes with debounce and data=isStale", async () => {
-    const mockRefetch = jest.fn();
     (useSearch as jest.Mock).mockReturnValue({
       data: [],
-      refetch: mockRefetch,
       isLoading: false,
       isStale: true,
     });
@@ -101,30 +98,12 @@ describe("SearchBox", () => {
     const { getByRole } = render(<SearchBox onSelect={mockOnSelect} />);
 
     const input = getByRole("searchbox");
-    fireEvent.focus(input);
-    fireEvent.change(input, { target: { value: "Ali" } });
-
-    await waitFor(() => {
-      expect(mockRefetch).toHaveBeenCalled();
+    act(() => {
+      fireEvent.focus(input);
+      fireEvent.change(input, { target: { value: "Ali" } });
     });
-  });
-  it("Don't refetche when data!=isStale", async () => {
-    const mockRefetch = jest.fn();
-    (useSearch as jest.Mock).mockReturnValue({
-      data: [],
-      refetch: mockRefetch,
-      isLoading: false,
-      isStale: false,
-    });
-
-    const { getByRole } = render(<SearchBox onSelect={mockOnSelect} />);
-
-    const input = getByRole("searchbox");
-    fireEvent.focus(input);
-    fireEvent.change(input, { target: { value: "Ali" } });
-
     await waitFor(() => {
-      expect(mockRefetch).not.toHaveBeenCalled();
+      expect(useSearch).toHaveBeenLastCalledWith("Ali");
     });
   });
 });
