@@ -1,5 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
-import{PersonCredits} from "@/types"
+import { PersonCredits } from "@/types";
 import getSharedMovies from "@/utils/getSharedMovies";
 
 const fetchCredits = async (personId: string): Promise<PersonCredits> => {
@@ -19,13 +19,13 @@ const fetchCredits = async (personId: string): Promise<PersonCredits> => {
   return data;
 };
 
-
 const useMovies = (personIds: string[]) => {
   return useQueries({
     queries: personIds.map((id) => ({
-      queryKey: ["person", id],
+      queryKey: ["combined_credits", id],
       queryFn: () => fetchCredits(id),
-      staleTime: Infinity,
+      // staleTime: Infinity,
+      enabled: !!id,
     })),
     combine: (results) => {
       const creditsArray = results
@@ -38,6 +38,7 @@ const useMovies = (personIds: string[]) => {
         isLoading: results.some((r) => r.isLoading),
         isError: results.some((r) => r.isError),
         isSuccess: results.every((r) => r.isSuccess),
+        isFetching: results.some((r) => r.isFetching),
         errors: results.map((r) => r.error).filter(Boolean),
       };
     },

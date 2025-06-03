@@ -1,4 +1,4 @@
-import{PersonCredits,CombinedMovie,TmdbMovieCreditBase} from "@/types"
+import { PersonCredits, CombinedMovie, TmdbMovieCreditBase } from "@/types";
 
 export default function getSharedMovies(
   personCredits: PersonCredits[]

@@ -1,6 +1,6 @@
 import { useQueries } from "@tanstack/react-query";
 import { personType } from "@/types";
-const fetchPerson = async (personId: string): Promise<personType[]> => {
+const fetchPerson = async (personId: string): Promise<personType> => {
   const response = await fetch(
     process.env.NEXT_PUBLIC_API_URL + "person/" + personId,
     {
@@ -20,14 +20,16 @@ const usePersons = (personIds: string[]) => {
       queryKey: ["person", id],
       queryFn: () => fetchPerson(id),
       staleTime: Infinity,
+      enabled: !!id,
     })),
     combine: (results) => {
       return {
-        data: results.map((result) => result.data),
+        data: results.map((r) => r.data).filter((d): d is personType => !!d),
         pending: results.some((result) => result.isPending),
         isLoading: results.some((r) => r.isLoading),
         isError: results.some((r) => r.isError),
         isSuccess: results.every((r) => r.isSuccess),
+        isFetching: results.some((r) => r.isFetching),
         errors: results.map((r) => r.error).filter(Boolean),
       };
     },
