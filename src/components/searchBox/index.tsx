@@ -7,7 +7,7 @@ import Image from "next/image";
 import { SearchIcon, ArrowLeftIcon, UserIcon } from "@/components/icons";
 type SearchBoxType = {
   placeholder?: string;
-  onSelect: (id: string | number) => void;
+  onSelect: (id: string ) => void;
 };
 export default function SearchBox({
   placeholder = "Search Casts...",
@@ -37,7 +37,7 @@ export default function SearchBox({
     setFocus(false);
   };
   const handleSelect = (id: string | number) => {
-    onSelect(id);
+    onSelect(id as string);
     resetAll();
   };
   return (

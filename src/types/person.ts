@@ -14,4 +14,5 @@ export type personType = {
   place_of_birth: string;
   popularity: number;
   profile_path: string;
+  known_for?:string[]
 };

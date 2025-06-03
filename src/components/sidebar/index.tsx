@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect } from "react";
 type SidebarType = {
   children: React.ReactNode;
