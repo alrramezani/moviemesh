@@ -1,12 +1,24 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
+import { useShallow } from "zustand/react/shallow";
+import usePeopleStore from "@/stores/usePeopleStore";
+import { personType } from "@/types";
+import Image from "next/image";
+import { UserIcon } from "@/components/icons";
+import SearchBox from "../searchBox";
+
 type SidebarType = {
-  children: React.ReactNode;
-  isOpen: boolean;
   isHide: boolean;
 };
 
-export default function Sidebar({ children, isOpen, isHide }: SidebarType) {
+export default function Sidebar({ isHide }: SidebarType) {
+  const { data, loading } = usePeopleStore(
+    useShallow((s) => ({
+      data: s.peopleData,
+      loading: s.peopleLoading,
+    }))
+  );
+  const [isOpen, SetIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -23,21 +35,80 @@ export default function Sidebar({ children, isOpen, isHide }: SidebarType) {
     }
     return () => document.body.classList.remove("overflow-hidden");
   }, [isOpen, isMobile]);
+  console.log(data);
 
   return (
     <>
       <div
+        onClick={() => SetIsOpen(false)}
         className={`bg-black fixed top-0 left-0 z-50 w-full h-full opacity-10 transition-all duration-300 md:hidden ease-in-out ${
           isHide ? "hidden" : isOpen ? "visible" : "hidden"
         }`}
       ></div>
       <aside
-        className={`fixed top-2 bottom-2 inset-x-2 z-50 bg-white rounded-lg shadow-md transition-all duration-300 ease-in-out
+        onClick={() => SetIsOpen(true)}
+        className={`fixed top-2 bottom-2 inset-x-2 z-50 bg-white rounded-lg shadow-md transition-all duration-300 ease-in-out overflow-x-hidden overflow-y-auto
     ${isHide ? "-translate-x-full" : "translate-x-0"}
-    ${isOpen ? "w-[calc(100%-1rem)]" : "w-14"}
+    ${isOpen ? " w-[85%]" : "w-14"}
     md:w-80`}
       >
-        {children}
+        {loading && (
+          <div className=" absolute h-full w-full bg-gray-200 rounded-lg animate-pulse cursor-progress" />
+        )}
+        <div className={`${isOpen ? "block" : "hidden"} md:block sticky top-0`}>
+          <SearchBox type="inBox" />
+        </div>
+        {data.map((person: personType) => (
+          <div
+            key={person.id}
+            className={`flex px-2 ${isOpen ? "my-3" : "my-2"}`}
+          >
+            <div className={`flex justify-center ${isOpen ? "" : "w-fit"}`}>
+              {!person.profile_path ? (
+                <div
+                  className={`bg-gray-50 rounded-lg ${
+                    isOpen ? "w-16 h-16" : "w-10 h-10"
+                  } md:w-16 md:h-16`}
+                >
+                  <UserIcon
+                    className={`text-gray-200  object-cover ${
+                      isOpen ? "w-16 h-16" : "w-10 h-10"
+                    } md:w-16 md:h-16`}
+                  />
+                </div>
+              ) : (
+                <Image
+                  data-tooltip-target="tooltip-jese"
+                  className={`rounded-lg object-cover ${
+                    isOpen ? "w-16 h-16" : "w-10 h-10"
+                  } md:w-16 md:h-16`}
+                  width={120}
+                  height={180}
+                  src={process.env.NEXT_PUBLIC_W500_IMAGE + person.profile_path}
+                  alt={person.name}
+                />
+              )}
+            </div>
+            <div
+              className={`pl-2 py-1 w-fit text-left ${
+                isOpen ? "block" : "hidden"
+              } md:block`}
+            >
+              <p className="font-medium capitalize text-ellipsis">
+                {person.name}
+              </p>
+              <p className="text-sm ">
+                {person.known_for_department}
+                {person.place_of_birth && (
+                  <>
+                    <span className=" text-lg"> . </span>
+                    <small className=" text-xs">{person.place_of_birth}</small>
+                  </>
+                )}
+              </p>
+            </div>
+          </div>
+        ))}
       </aside>
     </>
   );
