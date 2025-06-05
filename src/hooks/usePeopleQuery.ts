@@ -38,7 +38,7 @@ export default function usePeopleQuery() {
 
   const removeId = useCallback(
     (id: string) => {
-      updateUrl(currentIds.filter((x) => x !== id));
+      updateUrl(currentIds.filter((x) => x != id));
     },
     [currentIds, updateUrl]
   );

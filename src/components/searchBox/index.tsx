@@ -3,7 +3,6 @@ import { useState, useEffect, useMemo } from "react";
 import usePeopleQuery from "@/hooks/usePeopleQuery";
 import { debounce } from "lodash";
 import useSearch from "@/hooks/useSearch";
-import Skeleton from "@/components/skeleton";
 import Image from "next/image";
 import { SearchIcon, ArrowLeftIcon, UserCircleIcon } from "@/components/icons";
 type SearchBoxType = {
@@ -18,7 +17,7 @@ export default function SearchBox({
   const [focus, setFocus] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState("");
   const [queryKey, setQueryKey] = useState("");
-  const { data, isLoading } = useSearch(queryKey);
+  const { data } = useSearch(queryKey);
   const debouncedQueryKey = useMemo(
     () =>
       debounce((value: string) => {
@@ -94,54 +93,46 @@ export default function SearchBox({
             : ""
         } ${!data && "hidden"}`}
       >
-        {isLoading ? (
-          <Skeleton type="userSearch" count={5} />
-        ) : (
-          data?.map((person, i) => (
-            <div key={person.id}>
-              <div
-                className="flex items-center cursor-pointer"
-                data-testid={"search-item-" + person.id}
-                onMouseDown={() => handleSelect(person.id as unknown as string)}
-                onTouchStart={() =>
-                  handleSelect(person.id as unknown as string)
-                }
-              >
-                {!person.profile_path ? (
-                  <UserCircleIcon className="w-10 h-10 me-3 text-gray-200" />
-                ) : (
-                  <div className="w-10 h-10 overflow-hidden rounded-full me-3">
-                    <Image
-                      width={40}
-                      height={60}
-                      className="object-cover"
-                      src={
-                        process.env.NEXT_PUBLIC_W500_IMAGE + person.profile_path
-                      }
-                      alt={person.name}
-                    />
-                  </div>
-                )}
-                <div className="pl-2 text-left">
-                  <div className="mb-2 w-full text-ellipsis">
-                    {person.name}
-                    <small className="pl-1 text-xs">
-                      {person.original_name}
-                    </small>
-                  </div>
-                  <div className="text-sm w-full text-ellipsis">
-                    known for: {person.known_for_department}
-                  </div>
-                </div>
-              </div>
-              {i < data.length - 1 && (
-                <div className="flex items-center justify-center">
-                  <div className="h-[1px] bg-gray-200 w-3/4 my-2"></div>
+        {data?.map((person, i) => (
+          <div key={person.id}>
+            <div
+              className="flex items-center cursor-pointer"
+              data-testid={"search-item-" + person.id}
+              onMouseDown={() => handleSelect(person.id as unknown as string)}
+              onTouchStart={() => handleSelect(person.id as unknown as string)}
+            >
+              {!person.profile_path ? (
+                <UserCircleIcon className="w-10 h-10 me-3 text-gray-200" />
+              ) : (
+                <div className="w-10 h-10 overflow-hidden rounded-full me-3">
+                  <Image
+                    width={40}
+                    height={60}
+                    className="object-cover"
+                    src={
+                      process.env.NEXT_PUBLIC_W500_IMAGE + person.profile_path
+                    }
+                    alt={person.name}
+                  />
                 </div>
               )}
+              <div className="pl-2 text-left">
+                <div className="mb-2 w-full text-ellipsis">
+                  {person.name}
+                  <small className="pl-1 text-xs">{person.original_name}</small>
+                </div>
+                <div className="text-sm w-full text-ellipsis">
+                  known for: {person.known_for_department}
+                </div>
+              </div>
             </div>
-          ))
-        )}
+            {i < data.length - 1 && (
+              <div className="flex items-center justify-center">
+                <div className="h-[1px] bg-gray-200 w-3/4 my-2"></div>
+              </div>
+            )}
+          </div>
+        ))}
         {data && data.length <= 0 && (
           <div className="flex items-center justify-center h-16 text-center">
             Oops! No matches found. Give it another go.

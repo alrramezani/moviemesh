@@ -4,14 +4,15 @@ import { useShallow } from "zustand/react/shallow";
 import usePeopleStore from "@/stores/usePeopleStore";
 import { personType } from "@/types";
 import Image from "next/image";
-import { UserIcon } from "@/components/icons";
-import SearchBox from "../searchBox";
-
+import { CloseIcon, UserIcon } from "@/components/icons";
+import SearchBox from "@/components/searchBox";
+import usePeopleQuery from "@/hooks/usePeopleQuery";
 type SidebarType = {
   isHide: boolean;
 };
 
 export default function Sidebar({ isHide }: SidebarType) {
+  const { removeId } = usePeopleQuery();
   const { data, loading } = usePeopleStore(
     useShallow((s) => ({
       data: s.peopleData,
@@ -35,8 +36,6 @@ export default function Sidebar({ isHide }: SidebarType) {
     }
     return () => document.body.classList.remove("overflow-hidden");
   }, [isOpen, isMobile]);
-  console.log(data);
-
   return (
     <>
       <div
@@ -53,7 +52,7 @@ export default function Sidebar({ isHide }: SidebarType) {
     md:w-80`}
       >
         {loading && (
-          <div className=" absolute h-full w-full bg-gray-200 rounded-lg animate-pulse cursor-progress" />
+          <div data-testid="loading" className=" absolute h-full w-full bg-gray-200 rounded-lg animate-pulse cursor-progress" />
         )}
         <div className={`${isOpen ? "block" : "hidden"} md:block sticky top-0`}>
           <SearchBox type="inBox" />
@@ -61,8 +60,17 @@ export default function Sidebar({ isHide }: SidebarType) {
         {data.map((person: personType) => (
           <div
             key={person.id}
-            className={`flex px-2 ${isOpen ? "my-3" : "my-2"}`}
+            className={`flex px-2 relative ${isOpen ? "my-3" : "my-2"}`}
           >
+            <div
+              data-testid="remove-button"
+              onClick={() => removeId(person.id as unknown as string)}
+              className={`bg-gray-100 w-6 h-6 flex items-center justify-center rounded-full cursor-pointer absolute right-2 top-2 ${
+                isOpen ? "block" : "hidden"
+              }`}
+            >
+              <CloseIcon className="text-gray-500 text-xs w-4 h-4" />
+            </div>
             <div className={`flex justify-center ${isOpen ? "" : "w-fit"}`}>
               {!person.profile_path ? (
                 <div
@@ -71,7 +79,7 @@ export default function Sidebar({ isHide }: SidebarType) {
                   } md:w-16 md:h-16`}
                 >
                   <UserIcon
-                    className={`text-gray-200  object-cover ${
+                    className={`text-gray-200 object-cover ${
                       isOpen ? "w-16 h-16" : "w-10 h-10"
                     } md:w-16 md:h-16`}
                   />
