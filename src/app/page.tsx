@@ -10,14 +10,18 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
       <Sidebar isHide={!ids.length} />
-      <div className="w-[60%]">
-        <h1 className="text-4xl font-bold mb-10">
-          Discover movies by your favorite cast members
-        </h1>
-        <div className=" bg-white rounded-2xl shadow p-4">
-          <SearchBox />
+      {!ids.length ? (
+        <div className="md:w-[60%]">
+          <h1 className="text-4xl font-bold mb-10">
+            Discover movies by your favorite cast members
+          </h1>
+          <div className=" bg-white rounded-2xl shadow p-4">
+            <SearchBox />
+          </div>
         </div>
-      </div>
+      ) : (
+        ""
+      )}
     </main>
   );
 }

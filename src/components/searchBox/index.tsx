@@ -92,7 +92,7 @@ export default function SearchBox({
                 !focus && " md:hidden"
               }`
             : ""
-        } `}
+        } ${!data && "hidden"}`}
       >
         {isLoading ? (
           <Skeleton type="userSearch" count={5} />

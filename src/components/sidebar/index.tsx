@@ -48,7 +48,7 @@ export default function Sidebar({ isHide }: SidebarType) {
       <aside
         onClick={() => SetIsOpen(true)}
         className={`fixed top-2 bottom-2 inset-x-2 z-50 bg-white rounded-lg shadow-md transition-all duration-300 ease-in-out overflow-x-hidden overflow-y-auto
-    ${isHide ? "-translate-x-full" : "translate-x-0"}
+    ${isHide ? "-translate-x-[100vw]" : "translate-x-0"}
     ${isOpen ? " w-[85%]" : "w-14"}
     md:w-80`}
       >
