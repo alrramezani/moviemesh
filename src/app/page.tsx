@@ -1,23 +1,22 @@
 "use client";
 import useQuerySync from "@/hooks/useSyncQuery";
 import Sidebar from "@/components/sidebar";
-import { useState } from "react";
-
+import SearchBox from "@/components/searchBox";
+import usePeopleQuery from "@/hooks/usePeopleQuery";
 export default function Home() {
+  const { ids } = usePeopleQuery();
   useQuerySync();
-  const [hide,setHide] =useState(false)
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
-      <Sidebar isHide={hide}/>
-      <div className="bg-white w-[60%] p-4 rounded-2xl shadow">
-        <h1 className="text-4xl font-bold mb-4">🎬 MovieMesh</h1>
-        <p className="text-lg max-w-xl">
-          An open-source movie search app — discover films through the people
-          who made them.
-        </p>
-        <p className="mt-4 text-sm opacity-70 mb-4" onClick={()=>setHide(!hide)}>
-          🚧 Work in progress. Stay tuned!
-        </p>
+      <Sidebar isHide={!ids.length} />
+      <div className="w-[60%]">
+        <h1 className="text-4xl font-bold mb-10">
+          Discover movies by your favorite cast members
+        </h1>
+        <div className=" bg-white rounded-2xl shadow p-4">
+          <SearchBox />
+        </div>
       </div>
     </main>
   );
