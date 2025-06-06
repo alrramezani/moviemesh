@@ -1,3 +1,4 @@
+"use client"
 import usePeopleQuery from "@/hooks/usePeopleQuery";
 import SearchBox from "@/components/searchBox";
 import useMoviesStore from "@/stores/useMoviesStore";

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import Fotter from "@/components/footer";
 import { Montserrat, Open_Sans } from "next/font/google";
@@ -30,8 +31,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${montserrat.variable} ${openSans.variable}`}>
       <body>
+            <Suspense fallback={<div>Loading Sidebar...</div>}>
+
         <ReactQueryProvider>{children}</ReactQueryProvider>
         <Fotter />
+        </Suspense>
       </body>
     </html>
   );

@@ -1,3 +1,4 @@
+"use client"
 import { UserIcon } from "@/components/icons";
 import { useCallback } from "react";
 type SkeletonType = {
@@ -34,7 +35,7 @@ export default function Skeleton({ type, count = 3 }: SkeletonType) {
       default:
         return <p>Idle</p>;
     }
-  }, [type]);
+  }, [type, userSearchViewCreator]);
   return (
     <div role="status" data-testid="skeleton" className="max-w-sm animate-pulse">
       {LoadingBlock()}
