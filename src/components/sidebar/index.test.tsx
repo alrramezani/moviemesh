@@ -62,29 +62,35 @@ describe("Sidebar", () => {
 
     (usePeopleQuery as jest.Mock).mockReturnValue({
       removeId: mockRemoveId,
+      ids: ["1"],
     });
   });
 
   it("renders without crashing and displays person name", () => {
-    render(<Sidebar isHide={false} />);
+    render(<Sidebar />);
     expect(screen.getByText("John Doe")).toBeInTheDocument();
   });
 
   it("hides details when sidebar is collapsed", () => {
-    render(<Sidebar isHide={false} />);
+    render(<Sidebar />);
     const name = screen.queryByText("John Doe");
     expect(name).toBeInTheDocument();
   });
 
   it("applies '-translate-x-[100vw]' class when isHide is true", () => {
-    render(<Sidebar isHide={true} />);
+    (usePeopleQuery as jest.Mock).mockReturnValue({
+      ids: [],
+      addId: jest.fn(),
+      removeId: jest.fn(),
+      clearAll: jest.fn(),
+    });
+    render(<Sidebar />);
     const aside = screen.getByRole("complementary");
-
     expect(aside).toHaveClass("-translate-x-[100vw]");
   });
 
   it("calls removeId when remove button is clicked", () => {
-    render(<Sidebar isHide={false} />);
+    render(<Sidebar />);
     const removeButton = screen.getByTestId("remove-button");
     fireEvent.click(removeButton);
     expect(mockRemoveId).toHaveBeenCalledWith("1");
@@ -96,7 +102,7 @@ describe("Sidebar", () => {
       loading: true,
     });
 
-    render(<Sidebar isHide={false} />);
+    render(<Sidebar />);
     const loading = screen.getByTestId("loading");
     expect(loading).toBeInTheDocument();
   });

@@ -6,7 +6,7 @@ export default function Fotter() {
   const { ids } = usePeopleQuery();
 
   return (
-    <footer className={`bg-white text-center border-t border-gray-100 py-4 mt-8 text-xs pl-16 md:text-sm ${!ids.length?"md:pl-0":"md:pl-64"}`}>
+    <footer className={`bg-white text-center border-t border-gray-100 py-4 text-xs pl-16 pr-2 md:text-sm ${!ids.length?"md:pl-0":"md:pl-[336px]"} `}>
       <p className="mb-2">
         © 2025 MovieMesh. Open source on GitHub: alrramezani/moviemesh.
       </p>

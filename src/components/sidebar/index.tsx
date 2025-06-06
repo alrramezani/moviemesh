@@ -7,12 +7,9 @@ import Image from "next/image";
 import { CloseIcon, UserIcon } from "@/components/icons";
 import SearchBox from "@/components/searchBox";
 import usePeopleQuery from "@/hooks/usePeopleQuery";
-type SidebarType = {
-  isHide: boolean;
-};
 
-export default function Sidebar({ isHide }: SidebarType) {
-  const { removeId } = usePeopleQuery();
+export default function Sidebar() {
+  const { removeId,ids } = usePeopleQuery();
   const { data, loading } = usePeopleStore(
     useShallow((s) => ({
       data: s.peopleData,
@@ -40,34 +37,34 @@ export default function Sidebar({ isHide }: SidebarType) {
     <>
       <div
         onClick={() => SetIsOpen(false)}
-        className={`bg-black fixed top-0 left-0 z-50 w-full h-full opacity-10 transition-all duration-300 md:hidden ease-in-out ${
-          isHide ? "hidden" : isOpen ? "visible" : "hidden"
+        className={`bg-black fixed top-0 left-0 z-30 w-full h-full opacity-10 transition-all duration-300 md:hidden ease-in-out ${
+          !ids.length ? "hidden" : isOpen ? "visible" : "hidden"
         }`}
       ></div>
       <aside
         onClick={() => SetIsOpen(true)}
-        className={`fixed top-2 bottom-2 inset-x-2 z-50 bg-white rounded-lg shadow-md transition-all duration-300 ease-in-out overflow-x-hidden overflow-y-auto
-    ${isHide ? "-translate-x-[100vw]" : "translate-x-0"}
+        className={`fixed top-2 bottom-2 inset-x-2 z-30 bg-white rounded-lg shadow-md transition-all duration-300 ease-in-out overflow-x-hidden overflow-y-auto
+    ${!ids.length ? "-translate-x-[100vw]" : "translate-x-0"}
     ${isOpen ? " w-[85%]" : "w-14"}
-    md:w-80`}
+    md:w-80 md:rounded-none md:top-0 md:bottom-0 md:left-0`}
       >
         {loading && (
           <div data-testid="loading" className=" absolute h-full w-full bg-gray-200 rounded-lg animate-pulse cursor-progress" />
         )}
-        <div className={`${isOpen ? "block" : "hidden"} md:block sticky top-0`}>
+        <div className={`${isOpen ? "block" : "hidden"} md:block sticky top-0 z-50`}>
           <SearchBox type="inBox" />
         </div>
         {data.map((person: personType) => (
           <div
             key={person.id}
-            className={`flex px-2 relative ${isOpen ? "my-3" : "my-2"}`}
+            className={`flex px-2 relative  ${isOpen ? "my-3" : "my-2"}`}
           >
             <div
               data-testid="remove-button"
               onClick={() => removeId(person.id as unknown as string)}
               className={`bg-gray-100 w-6 h-6 flex items-center justify-center rounded-full cursor-pointer absolute right-2 top-2 ${
                 isOpen ? "block" : "hidden"
-              }`}
+              } md:block`}
             >
               <CloseIcon className="text-gray-500 text-xs w-4 h-4" />
             </div>
@@ -76,12 +73,12 @@ export default function Sidebar({ isHide }: SidebarType) {
                 <div
                   className={`bg-gray-50 rounded-lg ${
                     isOpen ? "w-16 h-16" : "w-10 h-10"
-                  } md:w-16 md:h-16`}
+                  } md:w-16 md:h-16 transition-all duration-300 ease-in-out`}
                 >
                   <UserIcon
                     className={`text-gray-200 object-cover ${
                       isOpen ? "w-16 h-16" : "w-10 h-10"
-                    } md:w-16 md:h-16`}
+                    } md:w-16 md:h-16 transition-all duration-300 ease-in-out `}
                   />
                 </div>
               ) : (
@@ -89,7 +86,7 @@ export default function Sidebar({ isHide }: SidebarType) {
                   data-tooltip-target="tooltip-jese"
                   className={`rounded-lg object-cover ${
                     isOpen ? "w-16 h-16" : "w-10 h-10"
-                  } md:w-16 md:h-16`}
+                  } md:w-16 md:h-16 transition-all duration-300 ease-in-out `}
                   width={120}
                   height={180}
                   src={process.env.NEXT_PUBLIC_W500_IMAGE + person.profile_path}
@@ -98,9 +95,9 @@ export default function Sidebar({ isHide }: SidebarType) {
               )}
             </div>
             <div
-              className={`pl-2 py-1 w-fit text-left ${
+              className={`pl-2 py-1 w-fit text-left flex-1 ${
                 isOpen ? "block" : "hidden"
-              } md:block`}
+              } md:block transition-all duration-300 ease-in-out `}
             >
               <p className="font-medium capitalize text-ellipsis">
                 {person.name}

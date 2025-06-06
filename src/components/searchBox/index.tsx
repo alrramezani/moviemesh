@@ -47,7 +47,7 @@ export default function SearchBox({
         focus ? "fixed h-full bg-white z-50" : "relative"
       } top-0 left-0 flex flex-col ${
         type === "free" ? "md:relative md:z-10" : ""
-      }`}
+      } z-50`}
     >
       <div className="relative">
         <div
