@@ -27,6 +27,7 @@ concurrency:
 jobs:
   # Build job
   build:
+    environment: production
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -74,6 +75,12 @@ jobs:
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          API_KEY: ${{ secrets.API_KEY }}
+          NEXT_PUBLIC_API_ACCESS_TOKEN: ${{ secrets.NEXT_PUBLIC_API_ACCESS_TOKEN }}
+          NEXT_PUBLIC_W500_IMAGE: ${{ secrets.NEXT_PUBLIC_W500_IMAGE }}
+          NEXT_PUBLIC_OG_IMAGE: ${{ secrets.NEXT_PUBLIC_OG_IMAGE }}
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
