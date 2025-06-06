@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import usePeopleQuery from "@/hooks/usePeopleQuery";
 import { debounce } from "lodash";
 import useSearch from "@/hooks/useSearch";
@@ -18,6 +18,7 @@ export default function SearchBox({
   const [inputValue, setInputValue] = useState("");
   const [queryKey, setQueryKey] = useState("");
   const { data } = useSearch(queryKey);
+  const blurTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const debouncedQueryKey = useMemo(
     () =>
       debounce((value: string) => {
@@ -32,6 +33,13 @@ export default function SearchBox({
     debouncedQueryKey(inputValue);
     return () => debouncedQueryKey.cancel();
   }, [inputValue, debouncedQueryKey]);
+  useEffect(() => {
+    return () => {
+      if (blurTimeoutRef.current) {
+        clearTimeout(blurTimeoutRef.current);
+      }
+    };
+  }, []);
   const resetAll = () => {
     setInputValue("");
     setQueryKey("");
@@ -80,8 +88,20 @@ export default function SearchBox({
           required
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
+          // onFocus={() => setFocus(true)}
+          // onBlur={() => setFocus(false)}
+          onFocus={() => {
+            if (blurTimeoutRef.current) {
+              clearTimeout(blurTimeoutRef.current);
+              blurTimeoutRef.current = null;
+            }
+            setFocus(true);
+          }}
+          onBlur={() => {
+            blurTimeoutRef.current = setTimeout(() => {
+              setFocus(false);
+            }, 150); // delay to allow clicks inside dropdown
+          }}
         />
       </div>
       <div
@@ -98,8 +118,7 @@ export default function SearchBox({
             <div
               className="flex items-center cursor-pointer"
               data-testid={"search-item-" + person.id}
-              onMouseDown={() => handleSelect(person.id as unknown as string)}
-              onTouchStart={() => handleSelect(person.id as unknown as string)}
+              onClick={() => handleSelect(person.id as unknown as string)}
             >
               {!person.profile_path ? (
                 <UserCircleIcon className="w-10 h-10 me-3 text-gray-200" />
