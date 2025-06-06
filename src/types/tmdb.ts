@@ -7,6 +7,7 @@ export interface TmdbMovieCreditBase {
   vote_count: number;
   overview: string;
   media_type: string;
+  original_name?:string;
 }
 
 export interface TmdbCastCredit extends TmdbMovieCreditBase {

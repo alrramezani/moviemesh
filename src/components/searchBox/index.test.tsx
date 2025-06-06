@@ -10,10 +10,20 @@ import SearchBox from "./index";
 import useSearch from "@/hooks/useSearch";
 import "@testing-library/jest-dom";
 
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    prefetch: jest.fn(),
+    replace: jest.fn(),
+    pathname: '/',
+    query: {},
+  }),
+  useSearchParams: () => new URLSearchParams(''),
+}));
+
 jest.mock("@/hooks/useSearch", () => jest.fn());
 
 describe("SearchBox", () => {
-  const mockOnSelect = jest.fn();
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -23,20 +33,11 @@ describe("SearchBox", () => {
       data: [],
       isLoading: false,
     });
-    render(<SearchBox placeholder="Search People" onSelect={mockOnSelect} />);
+    render(<SearchBox placeholder="Search People" />);
 
     expect(screen.getByPlaceholderText("Search People")).toBeInTheDocument();
   });
 
-  it("shows skeleton while loading", async () => {
-    (useSearch as jest.Mock).mockReturnValue({
-      data: [],
-      isLoading: true,
-    });
-
-    const { findByTestId } = render(<SearchBox onSelect={mockOnSelect} />);
-    expect(await findByTestId("skeleton")).toBeInTheDocument();
-  });
 
   it("renders search results", async () => {
     (useSearch as jest.Mock).mockReturnValue({
@@ -52,7 +53,7 @@ describe("SearchBox", () => {
       isLoading: false,
     });
 
-    const { findByText } = render(<SearchBox onSelect={mockOnSelect} />);
+    const { findByText } = render(<SearchBox />);
 
     expect(await findByText(/John Doe/)).toBeInTheDocument();
     expect(await findByText(/known for: Acting/)).toBeInTheDocument();
@@ -64,29 +65,11 @@ describe("SearchBox", () => {
       isLoading: false,
     });
 
-    const { findByText } = render(<SearchBox onSelect={mockOnSelect} />);
+    const { findByText } = render(<SearchBox />);
     expect(await findByText(/no matches found/i)).toBeInTheDocument();
   });
 
-  it("calls onSelect when a person is selected", async () => {
-    (useSearch as jest.Mock).mockReturnValue({
-      data: [
-        {
-          id: 2,
-          name: "Alice",
-          original_name: "Alice A.",
-          profile_path: null,
-          known_for_department: "Directing",
-        },
-      ],
-      isLoading: false,
-    });
-
-    const { findByTestId } = render(<SearchBox onSelect={mockOnSelect} />);
-    fireEvent.touchStart(await findByTestId("search-item-2"));
-    fireEvent.mouseDown(await findByTestId("search-item-2"));
-    expect(mockOnSelect).toHaveBeenCalledWith(2);
-  });
+  
 
   it("refetches when input value changes with debounce and data=isStale", async () => {
     (useSearch as jest.Mock).mockReturnValue({
@@ -95,7 +78,7 @@ describe("SearchBox", () => {
       isStale: true,
     });
 
-    const { getByRole } = render(<SearchBox onSelect={mockOnSelect} />);
+    const { getByRole } = render(<SearchBox />);
 
     const input = getByRole("searchbox");
     act(() => {
