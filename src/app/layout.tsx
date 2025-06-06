@@ -31,10 +31,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${montserrat.variable} ${openSans.variable}`}>
       <body>
-            <Suspense fallback={<div>Loading Sidebar...</div>}>
-
-        <ReactQueryProvider>{children}</ReactQueryProvider>
-        <Fotter />
+        <Suspense fallback={<div>Loading Sidebar...</div>}>
+          <ReactQueryProvider>{children}</ReactQueryProvider>
+          <Fotter />
         </Suspense>
       </body>
     </html>
