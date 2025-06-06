@@ -5,7 +5,7 @@ import MovieBox from "@/components/moveBox";
 export default function Home() {
   useQuerySync();
   return (
-    <main className="">
+    <main className="px-4">
       <Sidebar />
       <MovieBox />
     </main>

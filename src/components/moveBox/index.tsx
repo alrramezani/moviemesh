@@ -36,7 +36,7 @@ export default function MovieBox() {
     return person?.name;
   };
   return (
-    <div className="ml-20 md:ml-[336px] mr-4 my-2 bg-white rounded-lg shadow p-4 min-h-[calc(100vh-16px)]">
+    <div className="ml-16 md:ml-[320px] my-2 bg-white rounded-lg shadow p-4 min-h-[calc(100vh-16px)]">
       {!data.length && (
         <div className="w-full h-full flex justify-center items-center text-2xl py-32">
           No results. Try searching with fewer or different cast members.
